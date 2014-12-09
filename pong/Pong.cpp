@@ -26,11 +26,11 @@ Pong::Pong(const ContextSettings& settings)
 		ply1score(0),
 		ply2score(0),
 		mt(rd()),
-		Xrnd(WINDOW_WIDTH / 2, WINDOW_WIDTH - WINDOW_WIDTH / 2),
-		Yrnd(WINDOW_HEIGHT / 2, WINDOW_HEIGHT - WINDOW_HEIGHT / 2),
+		Yrnd(WINDOW_HEIGHT / 5, WINDOW_HEIGHT - WINDOW_HEIGHT / 5),
 		hitrnd(-PLAYER_HEIGHT / 2.5f, PLAYER_HEIGHT / 2.5f),
 		state(State::Splash),
-		ballDestYply1(-1), ballDestYply2(-1)
+		ballDestYply1(-1), ballDestYply2(-1),
+		aidelayrnd(AI_MIN_DELAY, AI_MAX_DELAY)
 {
 	window.setFramerateLimit(FRAME_RATE);
 	
@@ -42,6 +42,9 @@ Pong::Pong(const ContextSettings& settings)
 		throw runtime_error("Unable to load the plop sound");
 	if (!bufferBeep.loadFromFile(resourcePath() + BEEP_SOUND_FILENAME))
 		throw runtime_error("Unable to load the peep sound");
+	
+	// inti ai delay
+	aiDelay = aidelayrnd(mt);
 	
 	// init the separator
 	for (size_t i = 0; i < separator.size(); i++)
@@ -202,7 +205,7 @@ void Pong::updateBall(float ms)
 		{
 			ply1score++;
 			ply1Score.setString(to_string(ply1score));
-			ball.setPosition(Xrnd(mt), Yrnd(mt));
+			ball.setPosition(WINDOW_WIDTH / 2, Yrnd(mt));
 			ballVelocity.x = ballVelocity.y = -BALL_MIN_SPEED;
 			
 			// add randomness
@@ -251,7 +254,7 @@ void Pong::updateBall(float ms)
 		{
 			ply2score++;
 			ply2Score.setString(to_string(ply2score));
-			ball.setPosition(Xrnd(mt), Yrnd(mt));
+			ball.setPosition(WINDOW_WIDTH / 2, Yrnd(mt));
 			ballVelocity.x = ballVelocity.y = BALL_MIN_SPEED;
 			
 			// add randomness
@@ -309,18 +312,29 @@ void Pong::updateAI(RectangleShape& ai, float ms)
 		// if the ball will hit the roof/floor before to arrive to player 1
 		if (tx > ty)
 		{
+			float displacement = (ply1score == GOAL - 1 ? 1.f : 0.5f);
+			
 			if (ballVelocity.y > 0)
 			{
 				if (aiPos.y < WINDOW_HEIGHT - PLAYER_HEIGHT)
-					aiMovement.y += 1.f;
+					aiMovement.y += displacement;
 			}
 			else if (aiPos.y > 0)
-				aiMovement.y -= 1.f;
+				aiMovement.y -= displacement;
 		}
 		else
 		{
 			if (getBallDest(ai) < 0)
 			{
+				// add delay to ai reaction (only if this is not a mach point)
+				if (aiDelay > 0 && ply1score == GOAL - 1)
+				{
+					aiDelay -= ms;
+					return;
+				}
+				else
+					aiDelay = aidelayrnd(mt);
+				
 				// ball ordinate when it will have the same abscissa of ai
 				float destY = ballPos.y + ballVelocity.y * tx;
 				
@@ -503,7 +517,7 @@ void Pong::initEntities()
 {
 	// init the ball
 	ball.setFillColor(Color::White);
-	ball.setPosition(Xrnd(mt), Yrnd(mt));
+	ball.setPosition(WINDOW_WIDTH / 2, Yrnd(mt));
 	ballVelocity.x = ballVelocity.y = -BALL_MIN_SPEED;
 	
 	// init players

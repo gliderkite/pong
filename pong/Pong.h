@@ -125,6 +125,7 @@ private:
 	/* Players */
 	RectangleShape player1;
 	RectangleShape player2;
+	float aiDelay;
 	
 	/* Player movement */
 	Movement isMoving;
@@ -155,9 +156,9 @@ private:
 	/* Random generator */
 	random_device rd;
 	mt19937 mt;
-	uniform_real_distribution<float> Xrnd;
 	uniform_real_distribution<float> Yrnd;
 	uniform_real_distribution<float> hitrnd;
+	uniform_real_distribution<float> aidelayrnd;
 	
 	/* Game state */
 	State state;
