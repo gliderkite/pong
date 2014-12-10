@@ -206,7 +206,8 @@ void Pong::updateBall(float ms)
 			ply1score++;
 			ply1Score.setString(to_string(ply1score));
 			ball.setPosition(WINDOW_WIDTH / 2, Yrnd(mt));
-			ballVelocity.x = ballVelocity.y = -BALL_MIN_SPEED;
+			ballVelocity.x = -BALL_MIN_SPEED;
+			ballVelocity.y = -BALL_MIN_SPEED / 2;
 			
 			// add randomness
 			if (hitrnd(mt) < 0)
@@ -255,7 +256,8 @@ void Pong::updateBall(float ms)
 			ply2score++;
 			ply2Score.setString(to_string(ply2score));
 			ball.setPosition(WINDOW_WIDTH / 2, Yrnd(mt));
-			ballVelocity.x = ballVelocity.y = BALL_MIN_SPEED;
+			ballVelocity.x = BALL_MIN_SPEED;
+			ballVelocity.y = BALL_MIN_SPEED / 2;
 			
 			// add randomness
 			if (hitrnd(mt) < 0)
@@ -296,6 +298,12 @@ void Pong::updateAI(RectangleShape& ai, float ms)
 	Vector2f ballPos = ball.getPosition();
 	Vector2f aiPos = ai.getPosition();
 	
+	auto getOtherPlayerScore = [this, &ai]() -> unsigned
+	{
+		// returns the current store of the opponet player
+		return (&ai == &player1 ? ply2score : ply1score);
+	};
+	
 	/* update player 1 position */
 	if (isBallApproaching(ai))
 	{
@@ -312,7 +320,7 @@ void Pong::updateAI(RectangleShape& ai, float ms)
 		// if the ball will hit the roof/floor before to arrive to player 1
 		if (tx > ty)
 		{
-			float displacement = (ply1score == GOAL - 1 ? 1.f : 0.5f);
+			float displacement = (getOtherPlayerScore() == GOAL - 1 ? 1.f : 0.5f);
 			
 			if (ballVelocity.y > 0)
 			{
@@ -327,13 +335,16 @@ void Pong::updateAI(RectangleShape& ai, float ms)
 			if (getBallDest(ai) < 0)
 			{
 				// add delay to ai reaction (only if this is not a mach point)
-				if (aiDelay > 0 && ply1score == GOAL - 1)
+				if (getOtherPlayerScore() < GOAL - 1)
 				{
-					aiDelay -= ms;
-					return;
+					if (aiDelay > 0)
+					{
+						aiDelay -= ms;
+						return;
+					}
+					else
+						aiDelay = aidelayrnd(mt);
 				}
-				else
-					aiDelay = aidelayrnd(mt);
 				
 				// ball ordinate when it will have the same abscissa of ai
 				float destY = ballPos.y + ballVelocity.y * tx;
@@ -518,7 +529,8 @@ void Pong::initEntities()
 	// init the ball
 	ball.setFillColor(Color::White);
 	ball.setPosition(WINDOW_WIDTH / 2, Yrnd(mt));
-	ballVelocity.x = ballVelocity.y = -BALL_MIN_SPEED;
+	ballVelocity.x = -BALL_MIN_SPEED;
+	ballVelocity.y = -BALL_MIN_SPEED / 2;
 	
 	// init players
 	player1.setFillColor(Color::White);

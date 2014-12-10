@@ -21,8 +21,8 @@ namespace pong {
 	
 	static constexpr unsigned GOAL = 5;
 	
-	static constexpr float AI_MIN_DELAY = 200.f;
-	static constexpr float AI_MAX_DELAY = 250.f;
+	static constexpr float AI_MIN_DELAY = 150.f;
+	static constexpr float AI_MAX_DELAY = 200.f;
 	
 	static constexpr float BALL_SIZE = 15.f;
 	
