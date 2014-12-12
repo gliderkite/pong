@@ -42,6 +42,12 @@ Pong::Pong(const ContextSettings& settings)
 		throw runtime_error("Unable to load the plop sound");
 	if (!bufferBeep.loadFromFile(resourcePath() + BEEP_SOUND_FILENAME))
 		throw runtime_error("Unable to load the peep sound");
+	// init the icon
+	if (!icon.loadFromFile(resourcePath() + ICON_FILENAME))
+		throw runtime_error("Unable to load the icon");
+
+	// set the application icon
+	window.setIcon(128, 128, icon.getPixelsPtr());
 	
 	// inti ai delay
 	aiDelay = aidelayrnd(mt);

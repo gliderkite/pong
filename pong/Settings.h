@@ -21,7 +21,7 @@ namespace pong {
 	
 	static constexpr unsigned GOAL = 5;
 	
-	static constexpr float AI_MIN_DELAY = 150.f;
+	static constexpr float AI_MIN_DELAY = 100.f;
 	static constexpr float AI_MAX_DELAY = 200.f;
 	
 	static constexpr float BALL_SIZE = 15.f;
@@ -35,6 +35,7 @@ namespace pong {
 	static constexpr const char* FONT_FILENAME = "minecrafter.ttf";
 	static constexpr const char* PLOP_SOUND_FILENAME = "plop.ogg";
 	static constexpr const char* BEEP_SOUND_FILENAME = "beep.ogg";
+	static constexpr const char* ICON_FILENAME = "pong128.png";
 	
 	static constexpr float BALL_MAX_SPEED = 0.65f;
 	static constexpr float BALL_MIN_SPEED = 0.35f;

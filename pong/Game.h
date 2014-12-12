@@ -17,6 +17,7 @@
 /** Game abstract class. */
 class Game : public IGame
 {
+
 public:
 	
 	/** Initializes a new instance of the class. */
@@ -30,7 +31,7 @@ public:
 protected:
 	
 	/* frame rate: 60 frames per seconds */
-	const Time TimePerFrame = seconds(1.f / 60.f);
+	const Time TimePerFrame;
 	
 	
 	/** Process events. */

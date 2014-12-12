@@ -11,6 +11,7 @@
 
 Game::Game(VideoMode mode, const String& title, Uint32 style, const ContextSettings& settings)
 	:	window(mode, title, style, settings),
+		TimePerFrame(seconds(1.f / 60.f)),
 		IsPaused(false)
 {
 }

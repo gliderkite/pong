@@ -162,6 +162,9 @@ private:
 	
 	/* Game state */
 	State state;
+	
+	/* Application icon */
+	Image icon;
 };
 
 	
