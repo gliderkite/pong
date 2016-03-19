@@ -1,4 +1,4 @@
-#pong
+#PONG
 
 A tribute to the original [Atari PONG](http://en.wikipedia.org/wiki/Pong) game.
 
